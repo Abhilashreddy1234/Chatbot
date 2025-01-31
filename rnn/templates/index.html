@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <script>
+        function sendMessage() {
+            let userMessage = document.getElementById("userInput").value;
+
+            fetch("", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
+                body: "message=" + encodeURIComponent(userMessage)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("chatbotResponse").innerText = data.response;
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Simple Chatbot</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" id="userInput" placeholder="Type your message here...">
+        <button type="button" onclick="sendMessage()">Send</button>
+    </form>
+    <p id="chatbotResponse"></p>
+</body>
+</html>
